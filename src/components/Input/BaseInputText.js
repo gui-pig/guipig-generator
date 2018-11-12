@@ -115,7 +115,7 @@ class BaseInputText extends Component {
                 {typeof this.props.labelText === 'undefined'?null:<ControlLabel style={{textAlign:"left !important"}}>{this.props.labelText}</ControlLabel>}
                 <InputGroup>
                     {(this.inputPrefix === '')?null:<InputGroup.Addon>{this.inputPrefix}</InputGroup.Addon>}
-                        <FormControl disabled={this.props.disabled||false} onChange={this.onChange} style = {{textAlign:(this.validationType === 'number')?"right":"left"}} type="text" placeholder={this.props.placeholder} value={this.props.value}/>
+                        <FormControl disabled={this.props.disabled||false} onKeyPress={this.props.onKeyPress} onChange={this.onChange} style = {{textAlign:(this.validationType === 'number')?"right":"left"}} type="text" placeholder={this.props.placeholder} value={this.props.value}/>
                     {(this.inputSuffix === '')?null:<InputGroup.Addon>{this.inputSuffix}</InputGroup.Addon>}
                 </InputGroup>
                 {this.state.isValid?null:<HelpBlock style={validationStyle}>{this.state.validationText}</HelpBlock>}

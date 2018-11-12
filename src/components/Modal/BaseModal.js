@@ -8,7 +8,7 @@ class BaseModal extends Component {
             isShowModal:false
         };
         this.title = this.props.title || "";
-        this.modalButton = this.props.modalButton || [
+        this.buttons = this.props.buttons || [
             {
                 text:"Ok",
                 className:"btn-primary",
@@ -46,7 +46,7 @@ class BaseModal extends Component {
                                 {this.props.children}
                             </div>
                             <div className="modal-footer">
-                                {this.modalButton.map((b)=><button onClick={b.onClick} className={"btn waves-effect " + b.className}>{b.text}</button>)}
+                                {this.buttons.map((b)=><button onClick={b.onClick} className={"btn waves-effect " + b.className}>{b.text}</button>)}
                             </div>
                         </div>
                     </div>
