@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 import WorkSpaceSwitcher from './pages/WorkSpaceSwitcher'
-import Dashboard from './pages/Dashboard'
+import Layout from './layouts/Default.layout'
 import {getActiveWorkSpace} from "./utils/StorageUtils";
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import orange from '@material-ui/core/colors/orange';
+const theme = createMuiTheme({
+    palette: {
+        primary: orange,
+    },
+});
 class App extends Component {
 
     constructor(props){
@@ -17,9 +24,11 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                {this.state.activeWorkspace===null || this.state.activeWorkspace==='null'?<WorkSpaceSwitcher onRefreshWorkSpace={this.handleRefreshWorkSpace}/>:<Dashboard onRefreshWorkSpace={this.handleRefreshWorkSpace}/>}
-            </div>
+            <MuiThemeProvider theme={theme}>
+                <div className="App">
+                    {this.state.activeWorkspace===null || this.state.activeWorkspace==='null'?<WorkSpaceSwitcher onRefreshWorkSpace={this.handleRefreshWorkSpace}/>:<Layout onRefreshWorkSpace={this.handleRefreshWorkSpace}/>}
+                </div>
+            </MuiThemeProvider>
         );
     }
 }

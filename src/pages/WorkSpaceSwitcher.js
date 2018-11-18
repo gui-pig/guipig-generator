@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Select from 'react-select'
 import Modal from '../components/Modal/BaseModal'
 import BaseInputText from "../components/Input/BaseInputText";
-import {createDatabase} from "../utils/DbUtils";
+import db from "../utils/DbUtils";
 import {setActiveWorkSpace} from "../utils/StorageUtils";
 
 class Page extends Component {
@@ -16,27 +16,27 @@ class Page extends Component {
         }
     }
 
-    async componentDidMount() {
-        this.db = await createDatabase();
-        const sub =
-            this.db.workspaces.find().sort({id: 1}).$.subscribe(workspaces => {
-                if (!workspaces)
-                    return;
-                this.setState({workspaces: workspaces});
+    componentDidMount() {
+        db.table('workspaces')
+            .toArray()
+            .then((w)=>this.setState({workspaces:w}))
+    }
+
+    addWorkspace() {
+        const ws = {name:this.state.newWorkspace};
+        db.table('workspaces')
+            .add(ws)
+            .then((id) => {
+                this.setState({newWorkspace:"", workspaces: [...this.state.workspaces, Object.assign({}, ws, { id })] },()=>this.triggerModal());
             });
-        this.subs.push(sub);
     }
 
-    async addWorkspace() {
-        const id = Date.now().toString();
-        const ws = {id, name: this.state.newWorkspace};
-        await this.db.workspaces.insert(ws);
-        this.setState({newWorkspace:""},()=>this.triggerModal())
-    }
-
-    async deleteWorkspace(){
-        await this.db.workspaces.find().where('id').eq(this.state.selectedWorkspace.value).remove()
-        this.setState({selectedWorkspace:null});
+    deleteWorkspace(){
+        db.table('workspaces')
+            .delete(this.state.selectedWorkspace.value)
+            .then(() => {
+                this.setState({ workspaces: this.state.workspaces.filter((workspace) => workspace.id !== this.state.selectedWorkspace.value),selectedWorkspace:null});
+            });
     }
 
 

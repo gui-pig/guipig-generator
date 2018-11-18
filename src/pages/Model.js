@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import Select from 'react-select'
-import Modal from '../components/Modal/BaseModal'
-import BaseInputText from "../components/Input/BaseInputText";
-import {createDatabase} from "../utils/DbUtils";
 import {getActiveWorkSpace, setActiveWorkSpace} from "../utils/StorageUtils";
 
 class Page extends Component {
@@ -19,11 +15,11 @@ class Page extends Component {
     render() {
         return (
             <section className="login-block">
-              Dashboard {getActiveWorkSpace()}
-              <button onClick={()=>{setActiveWorkSpace(null);this.props.onRefreshWorkSpace()}}>Switch Workspace</button>
+                Model {getActiveWorkSpace()}
+                <button onClick={()=>{setActiveWorkSpace(null);this.props.onRefreshWorkSpace()}}>Switch Workspace</button>
             </section>
         );
-      }
+    }
 }
 
 export default Page;

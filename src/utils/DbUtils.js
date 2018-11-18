@@ -1,5 +1,13 @@
 import * as RxDB from 'rxdb';
 import {schema} from "../schemas/WorkSpace";
+import {Component} from "react";
+import Dexie from 'dexie'
+
+const ddb = new Dexie('GPigGenDB');
+ddb.version(1).stores({ workspaces: '++id,name' });
+
+
+export default ddb;
 
 const syncURL = 'http://localhost:5984/';
 const dbName = 'gpgdb';
@@ -34,22 +42,26 @@ async function aw(name) {
 export const createDatabase = cdb;
 export const addWorkspace = aw;
 
-export default class DbUtils {
-    constructor(){
-
+export class DbUtils extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            workspaces:[]
+        }
     }
-    async init(){
-        this.db = await cdb();
-    }
 
-    listen(){
+    async componentDidMount() {
+        this.db = await createDatabase();
         const sub =
             this.db.workspaces.find().sort({id: 1}).$.subscribe(workspaces => {
                 if (!workspaces)
                     return;
-                console.log('Reloading messages',workspaces);
                 this.setState({workspaces: workspaces});
             });
         this.subs.push(sub);
+    }
+
+    getWorkspaces = () =>{
+        return this.state.workspaces;
     }
 }
