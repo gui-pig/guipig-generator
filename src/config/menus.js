@@ -2,7 +2,10 @@ import React from 'react'
 
 import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
 import FaceIcon from '@material-ui/icons/Face';
+import BuildIcon from '@material-ui/icons/Build';
 import Board from '../pages/Board';
+import Model from '../pages/Model';
+
 
 export const menuList = [
     {
@@ -14,6 +17,11 @@ export const menuList = [
         title:"Model",
         icon:<FaceIcon/>,
         url:"/model",
-        component:Board
+        component:Model
+    },{
+        title:"Setting",
+        icon:<BuildIcon/>,
+        url:"/model",
+        component:Model
     }
 ]

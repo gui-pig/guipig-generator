@@ -1,18 +1,15 @@
 import React from 'react';
-import { createBrowserHistory } from 'history';
 import { Switch, Route } from 'react-router-dom';
-import Main from "../layouts/Default.layout"
-import Routers from "./Routers";
+import {menuList} from "../config/menus";
+import Board from '../pages/Board';
 
 const Router = () => (
-		<Switch>
-			{/*<Route exact path='/' component={Dashb}/>*/}
-
-			{/*Excluded routes*/}
-
-			{/*Default route when not defined here*/}
-			<Route component={Routers}/>
-		</Switch>
+    <Switch>
+        {menuList.map((prop) => {
+            return <Route path={prop.url} component={prop.component} />;
+        })}
+        <Route component={Board} />
+    </Switch>
 );
 
 export default Router;

@@ -1,32 +1,27 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import {Switch,Route,Redirect,withRouter} from 'react-router-dom';
+import {Redirect,withRouter} from 'react-router-dom';
+
+import MainRouter from '../routers/Main.router'
+import SideBar from '../components/Navigation/SideBar'
+
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/';
 import Typography from '@material-ui/core/Typography/';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import Grid from '@material-ui/core/Grid';
 import {setActiveWorkSpace} from "../utils/StorageUtils";
 
-import {menuList} from "../config/menus";
-
 const styles = {
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
-    },
     root: {
         flexGrow: 1,
     },
     grow: {
         flexGrow: 2,
+    },
+    container:{
+      padding:"35px"
     },
     menuButton: {
         marginLeft: -12,
@@ -76,17 +71,6 @@ class Layout extends Component {
         this.setState({ sidebarOpen: open });
     }
 
-
-    getRoute = () => {
-        return (
-            <Switch>
-                {menuList.map((prop) => {
-                    return <Route path={prop.url} component={prop.component} />;
-                })}
-            </Switch>);
-    };
-
-
     render() {
         const { classes } = this.props;
         const { redirectTo,isRedirect } = this.state;
@@ -109,21 +93,10 @@ class Layout extends Component {
                     </AppBar>
                 </Grid>
                 <Grid className={classes.sideList} color="primary" item md={2}>
-                    <List component="nav">
-                        {menuList.map((m)=><ListItem
-                            button
-                            selected={this.state.selectedIndex === 0}
-                            onClick={event => this.handleListItemClick(m.url)}
-                        >
-                            <ListItemIcon style={{color:"white"}}>
-                                {m.icon}
-                            </ListItemIcon>
-                            <ListItemText primaryTypographyProps={{style:{color:"white"}}} primary={m.title} />
-                        </ListItem>)}
-                    </List>
+                   <SideBar handleListItemClick={this.handleListItemClick}/>
                 </Grid>
-                <Grid item md>
-                    {this.getRoute()}
+                <Grid item md container className={classes.container}>
+                    <MainRouter/>
                 </Grid>
             </Grid>
         );

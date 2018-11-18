@@ -34,3 +34,8 @@
     /*transform: rotate(360deg);*/
   /*}*/
 /*}*/
+
+.css-bl6clz {
+    z-index: 99999 !important;
+}
+.Select.is-open { position: relative; z-index: 1010; }

@@ -11,6 +11,5 @@ export function getActiveWorkSpace() {
 }
 
 export function setActiveWorkSpace(value) {
-    console.log(value)
     return set("activeWorkspace",value)
 }
