@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import Select from 'react-select'
 import Modal from '../components/Modal/BaseModal'
+import FormDialog from '../components/Dialog/FormDialog'
 import BaseInputText from "../components/Input/BaseInputText";
 import db from "../utils/DbUtils";
 
 import CancelIcon from '@material-ui/icons/Cancel';
+import RemoveIcon from '@material-ui/icons/Remove';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import AddIcon from '@material-ui/icons/Add';
 import classNames from 'classnames';
 import {setActiveWorkSpace} from "../utils/StorageUtils";
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+
+import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
 
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import Paper from '@material-ui/core/Paper';
@@ -29,6 +34,15 @@ const styles = theme => ({
         display: 'flex',
         padding: 0,
     },
+    container:{
+        background: "#fff",
+        minHeight:"320px",
+        marginBottom:"80%",
+        borderRadius: "2px",
+        padding:"20px",
+        display: "inline-block",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+    },
     valueContainer: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -44,6 +58,9 @@ const styles = theme => ({
             theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
             0.08,
         ),
+    },
+    button:{
+        width:"100%"
     },
     noOptionsMessage: {
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -67,8 +84,13 @@ const styles = theme => ({
         height: theme.spacing.unit * 2,
     },
     card: {
+        position:"relative !important",
         minWidth: 375,
-        zIndex:30
+        zIndex:20
+    },
+    cardChild: {
+        position:"relative !important",
+        zIndex:30000
     },
     bullet: {
         display: 'inline-block',
@@ -82,47 +104,6 @@ const styles = theme => ({
         marginBottom: 12,
     },
 });
-
-
-const suggestions = [
-    { label: 'Afghanistan' },
-    { label: 'Aland Islands' },
-    { label: 'Albania' },
-    { label: 'Algeria' },
-    { label: 'American Samoa' },
-    { label: 'Andorra' },
-    { label: 'Angola' },
-    { label: 'Anguilla' },
-    { label: 'Antarctica' },
-    { label: 'Antigua and Barbuda' },
-    { label: 'Argentina' },
-    { label: 'Armenia' },
-    { label: 'Aruba' },
-    { label: 'Australia' },
-    { label: 'Austria' },
-    { label: 'Azerbaijan' },
-    { label: 'Bahamas' },
-    { label: 'Bahrain' },
-    { label: 'Bangladesh' },
-    { label: 'Barbados' },
-    { label: 'Belarus' },
-    { label: 'Belgium' },
-    { label: 'Belize' },
-    { label: 'Benin' },
-    { label: 'Bermuda' },
-    { label: 'Bhutan' },
-    { label: 'Bolivia, Plurinational State of' },
-    { label: 'Bonaire, Sint Eustatius and Saba' },
-    { label: 'Bosnia and Herzegovina' },
-    { label: 'Botswana' },
-    { label: 'Bouvet Island' },
-    { label: 'Brazil' },
-    { label: 'British Indian Ocean Territory' },
-    { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-    value: suggestion.label,
-    label: suggestion.label,
-}));
 
 function NoOptionsMessage(props) {
     return (
@@ -257,7 +238,7 @@ class Page extends Component {
                 this.setState({
                     newWorkspace: "",
                     workspaces: [...this.state.workspaces, Object.assign({}, ws, {id})]
-                }, () => this.triggerModal());
+                }, () => this.triggerDialog());
             });
     }
 
@@ -294,35 +275,39 @@ class Page extends Component {
             }),
         };
         return (
-            <Grid container md={12}>
-                <Modal
-                    ref={(i)=>{if(null!=i)this.triggerModal = i.triggerModal}}
+            <Grid container md={12} style={{minHeight:"100vh"}}>
+                <FormDialog
+                    ref={(i)=>{if(null!=i)this.triggerDialog = i.triggerDialog}}
+                    title={"Add Workspace"}
                     buttons={[
                         {
                             text:"Cancel",
-                            className:"btn-warning",
-                            onClick: ()=>this.triggerModal()
+                            color:"primary",
+                            onClick: ()=>this.triggerDialog()
                         },
                         {
                             text:"Add",
-                            className:"btn-primary",
+                            color:"primary",
                             onClick: ()=>this.addWorkspace()
                         }
                     ]}
-                    title={"Add Workspace"}
                 >
-                    <BaseInputText
+                    <TextField
+                        autoFocus
                         onKeyPress={(e)=>{
                             if (e.key === 'Enter') {
                                 this.addWorkspace();
                             }
                         }}
-                        labelText={"Workspace Name"}
                         value={this.state.newWorkspace}
-                        placeholder={"Workspace Name"}
                         onChange={(e)=>this.setState({newWorkspace:e.target.value})}
+                        margin="dense"
+                        id="name"
+                        label="Workspace Name"
+                        type="text"
+                        fullWidth
                     />
-                </Modal>
+                </FormDialog>
                 <Grid
                     md={2}
                 />
@@ -336,25 +321,46 @@ class Page extends Component {
                     />
                     <Grid
                         md={6}
+                        container
+                        className={classes.container}
                     >
-                        <Card className={classes.card}>
-                            <CardContent>
-                                <Typography variant="h5" component="h2">
-                                    <center>GUIPIG - GENERATOR</center>
-                                </Typography>
-                                <center><img src="../files/assets/images/guinea-pig.png" style={{maxWidth:"30%"}} alt="logo.png"/></center>
-                                <Select
-                                    classes={classes}
-                                    styles={selectStyles}
-                                    options={suggestions}
-                                    components={components}
-                                    value={this.state.single}
-                                    onChange={this.handleChange('single')}
-                                    placeholder="Search a country (start with a)"
-                                />
-                                <br/>
-                            </CardContent>
-                        </Card>
+                        <Grid md={12}>
+                            <Typography variant="h5" component="h2">
+                                <center>GUIPIG - GENERATOR</center>
+                            </Typography>
+                            <center><img src="../files/assets/images/guinea-pig.png" style={{maxWidth:"30%"}} alt="logo.png"/></center>
+                        </Grid>
+                        <Grid md={12} style={{marginTop:"20px"}}>
+                            <Select
+                                classes={classes}
+                                styles={selectStyles}
+                                value={this.state.selectedWorkspace}
+                                onChange={this.handleChangeWorkspace}
+                                options={this.state.workspaces.map((e)=>{return {key:e.id,value:e.id,label:e.name}})}
+                                components={components}
+                                placeholder="Search a country (start with a)"
+                            />
+                        </Grid>
+                        <Grid md={12} container style={{marginTop:"20px"}}>
+                            {this.state.selectedWorkspace!==null?[<Grid md={6}>
+                                <Button variant="contained"  style={{marginRight:"5px",backgroundColor:red.A700,color:"white"}} onClick={()=>this.deleteWorkspace()} color="default" className={classes.button}>
+                                    <RemoveIcon></RemoveIcon>
+                                    Delete Workspace
+                                </Button>
+                            </Grid>,
+                                <Grid md={6}>
+                                    <Button variant="contained" style={{marginLeft:"5px",backgroundColor:green.A700,color:"white"}} onClick={()=>{setActiveWorkSpace(this.state.selectedWorkspace.value);this.props.onRefreshWorkSpace()}} color="default" className={classes.button}>
+                                        <ArrowRightIcon></ArrowRightIcon>
+                                        Go To Workspace
+                                    </Button>
+                                </Grid>].map(c=>c):null}
+                            <Grid md={12} style={{marginTop:"10px",marginBottom:"20px"}}>
+                                <Button onClick={()=>this.triggerDialog()} variant="contained" color="secondary" className={classes.button}>
+                                    <AddIcon/>
+                                    Add New Workspace
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid
                         md={3}

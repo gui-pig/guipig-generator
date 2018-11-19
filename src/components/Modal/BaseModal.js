@@ -1,4 +1,31 @@
 import React, {Component} from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
+
+const styles = theme => ({
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+    },
+});
 
 class BaseModal extends Component {
 
@@ -30,29 +57,20 @@ class BaseModal extends Component {
     }
 
     render(){
-        return (this.state.isShowModal?[
-                <div className="modal-backdrop fade show modal-stack" style={{zIndex: "1049"}}/>,
-                <div className="modal show fade" id="default-Modal" tabIndex="-1"
-                     style={{zIndex: 1050, display: "block", paddingRight: "0px"}} role="dialog">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h4 className="modal-title">{this.title}</h4>
-                                <button type="button" className="close" onClick={this.hideModal} data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                {this.props.children}
-                            </div>
-                            <div className="modal-footer">
-                                {this.buttons.map((b)=><button onClick={b.onClick} className={"btn waves-effect " + b.className}>{b.text}</button>)}
-                            </div>
-                        </div>
-                    </div>
-                </div>].map(c=>c):null
+        const { classes,children } = this.props;
+        return (
+            <Modal
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+                open={this.state.isShowModal}
+                onClose={this.hideModal}
+            >
+                <div style={getModalStyle()} className={classes.paper}>
+                    {children}
+                </div>
+            </Modal>
         );
     }
 }
 
-export default BaseModal;
+export default withStyles(styles)(BaseModal);
