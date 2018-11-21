@@ -24,6 +24,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography/';
+import Workspace from "../models/Workspace";
 
 const styles = theme => ({
     root: {
@@ -225,39 +226,27 @@ class Page extends Component {
     }
 
     componentDidMount() {
-        db.table('workspaces')
-            .toArray()
-            .then((w) => this.setState({workspaces: w}))
+        new Workspace().getAll((w) => this.setState({workspaces: w}))
     }
 
     addWorkspace() {
-        const ws = {name: this.state.newWorkspace};
-        db.table('workspaces')
-            .add(ws)
-            .then((id) => {
-                this.setState({
-                    newWorkspace: "",
-                    workspaces: [...this.state.workspaces, Object.assign({}, ws, {id})]
-                }, () => this.triggerDialog());
-            });
+        new Workspace(null,this.state.newWorkspace).save((ws) => {
+            this.setState({
+                newWorkspace: "",
+                workspaces: [...this.state.workspaces, Object.assign({}, ws)]
+            }, () => this.triggerDialog());
+        });
+
     }
 
     deleteWorkspace() {
-        db.table('workspaces')
-            .delete(this.state.selectedWorkspace.value)
-            .then(() => {
-                this.setState({
-                    workspaces: this.state.workspaces.filter((workspace) => workspace.id !== this.state.selectedWorkspace.value),
-                    selectedWorkspace: null
-                });
+        new Workspace(this.state.selectedWorkspace.value).delete(()=>{
+            this.setState({
+                workspaces: this.state.workspaces.filter((workspace) => workspace.id !== this.state.selectedWorkspace.value),
+                selectedWorkspace: null
             });
+        })
     }
-
-    handleChange = name => value => {
-        this.setState({
-            [name]: value,
-        });
-    };
 
     handleChangeWorkspace = (selectedOption) => {
         this.setState({selectedWorkspace: selectedOption});
@@ -338,7 +327,7 @@ class Page extends Component {
                                 onChange={this.handleChangeWorkspace}
                                 options={this.state.workspaces.map((e)=>{return {key:e.id,value:e.id,label:e.name}})}
                                 components={components}
-                                placeholder="Search a country (start with a)"
+                                placeholder="Select a workspace"
                             />
                         </Grid>
                         <Grid md={12} container style={{marginTop:"20px"}}>

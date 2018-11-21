@@ -21,7 +21,7 @@ export const menuList = [
     },{
         title:"Setting",
         icon:<BuildIcon/>,
-        url:"/model",
+        url:"/settings/",
         component:Model
     }
 ]

@@ -26,9 +26,10 @@ export default class FormDialog extends React.Component {
 
     render() {
         const {title,contentText,children,buttons} = this.props
-        return (<Dialog
+        return (this.state.open?<Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
+                    style={{minHeight:"calc(100%)!important"}}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">{title}</DialogTitle>
@@ -43,7 +44,7 @@ export default class FormDialog extends React.Component {
                             {b.text}
                         </Button>)}
                     </DialogActions>
-                </Dialog>
+                </Dialog>:null
         );
     }
 }

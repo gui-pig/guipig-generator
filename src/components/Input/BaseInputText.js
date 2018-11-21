@@ -111,7 +111,7 @@ class BaseInputText extends Component {
         let validationStyle = this.props.validationStyle||{fontSize:"11px"};
         if(this.props.validationColor && typeof  validationStyle.color === 'undefined' )validationStyle = Object.assign(validationStyle,{color:this.props.validationColor});
         return(
-            <FormGroup validationState={this.state.isValid?null:"error"} controlId="1">
+            <FormGroup validationState={this.state.isValid?null:"error"} style={this.props.formGroupStyle} controlId="1">
                 {typeof this.props.labelText === 'undefined'?null:<ControlLabel style={{textAlign:"left !important"}}>{this.props.labelText}</ControlLabel>}
                 <InputGroup>
                     {(this.inputPrefix === '')?null:<InputGroup.Addon>{this.inputPrefix}</InputGroup.Addon>}
