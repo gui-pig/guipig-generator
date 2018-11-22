@@ -92,7 +92,8 @@ class Page extends Component {
                     </Link>
                 </Grid>
                 <Grid item style={{marginBottom:"100%",
-                        backgroundColor: "#FAFAFA",
+                    boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
+                    backgroundColor: "white",
                     }} md={12}>
                     <AppBar position="static" color="default">
                         <Tabs
@@ -118,8 +119,8 @@ class Page extends Component {
                                     <TableRow>
                                         <TableCell>Name</TableCell>
                                         <TableCell>Type</TableCell>
-                                        <TableCell numeric>Length</TableCell>
-                                        <TableCell>Default</TableCell>
+                                        <TableCell style={{width:"10%"}}>Length</TableCell>
+                                        <TableCell style={{width:"18%"}}>Default</TableCell>
                                         <TableCell>Nullable</TableCell>
                                         <TableCell>Unique</TableCell>
                                         <TableCell>Primary</TableCell>
@@ -163,8 +164,14 @@ class Page extends Component {
                                                         </FormControl>
                                                     </FormGroup>
                                                 </TableCell>
-                                                <TableCell valign={"center"} padding={"checkbox"}>{row.length}</TableCell>
-                                                <TableCell padding={"checkbox"}>{row.defaultValue}</TableCell>
+                                                <TableCell padding={"checkbox"}>
+                                                    <AlphanumericInput formGroupStyle={{margin:0}}/>
+                                                    {row.length}
+                                                </TableCell>
+                                                <TableCell padding={"checkbox"}>
+                                                    <AlphanumericInput formGroupStyle={{margin:0}}/>
+                                                    {row.defaultValue}
+                                                </TableCell>
                                                 <TableCell padding={"checkbox"}><Checkbox checked={row.nullable}/></TableCell>
                                                 <TableCell padding={"checkbox"}><Checkbox checked={row.unique}/></TableCell>
                                                 <TableCell padding={"checkbox"}><Checkbox checked={row.primaryKey}/></TableCell>

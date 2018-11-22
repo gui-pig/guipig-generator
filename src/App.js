@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import WorkSpaceSwitcher from './pages/WorkSpaceSwitcher'
-import Layout from './layouts/Default.layout'
+import Layout from './layouts/Main.layout'
 import {getActiveWorkSpace} from "./utils/StorageUtils";
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
